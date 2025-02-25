@@ -8,7 +8,7 @@ def load_equivalences(csv_path):
 
 def bibtex_to_ris(bibtex_text, equivalences):
     """Convierte un texto en formato BibTeX a RIS."""
-    ris_lines = ["TY  - JOUR"]  # Tipo de referencia fija para artículos
+    ris_lines = ["TY  - CONF"]  # Tipo de referencia para conferencias
     
     for key, ris_tag in equivalences.items():
         pattern = rf"{key}\s*=\s*\{{(.*?)\}}"
@@ -16,19 +16,26 @@ def bibtex_to_ris(bibtex_text, equivalences):
         if match:
             value = match.group(1)
             
-            # Manejar autores separados por 'and'
             if key == "author":
                 authors = value.split(" and ")
                 for author in authors:
                     ris_lines.append(f"AU  - {author.strip()}")
+            elif key == "editor":
+                editors = value.split(" and ")
+                for editor in editors:
+                    ris_lines.append(f"ED  - {editor.strip()}")
             elif key == "pages":
-                pages = value.split("-")
+                pages = value.split("--")
                 ris_lines.append(f"SP  - {pages[0].strip()}")
-                ris_lines.append(f"EP  - {pages[1].strip()}")
+                if len(pages) > 1:
+                    ris_lines.append(f"EP  - {pages[1].strip()}")
+            elif key == "address":
+                ris_lines.append(f"CY  - {value.strip()}")
+            elif key == "isbn":
+                ris_lines.append(f"SN  - {value.strip()}")
             else:
                 ris_lines.append(f"{ris_tag}  - {value.strip()}")
     
-    # Extraer ID
     match = re.match(r"@\w+\{(.*?),", bibtex_text)
     if match:
         ris_lines.append(f"ID  - {match.group(1).strip()}")
@@ -38,7 +45,7 @@ def bibtex_to_ris(bibtex_text, equivalences):
 
 def ris_to_bibtex(ris_text, equivalences):
     """Convierte un texto en formato RIS a BibTeX."""
-    bibtex_lines = ["@article{"]
+    bibtex_lines = ["@InProceedings{"]
     fields = {}
     
     for line in ris_text.split("\n"):
@@ -49,8 +56,13 @@ def ris_to_bibtex(ris_text, equivalences):
                 bib_key = [key for key, tag in equivalences.items() if tag == ris_tag][0]
                 if bib_key == "author":
                     fields.setdefault("author", []).append(value)
-                elif bib_key in ["pages"]:
-                    fields["pages"] = fields.get("pages", "") + ("-" if "pages" in fields else "") + value
+                elif bib_key == "editor":
+                    fields.setdefault("editor", []).append(value)
+                elif bib_key == "pages":
+                    if "pages" in fields:
+                        fields["pages"] += f"--{value}"
+                    else:
+                        fields["pages"] = value
                 else:
                     fields[bib_key] = value
             elif ris_tag == "ID":
@@ -68,31 +80,17 @@ def ris_to_bibtex(ris_text, equivalences):
 equivalences = load_equivalences("tag_equivalence.csv")
 
 # Ejemplo de uso
-bibtex_example = """@article{Smith2023,
-author = {Smith, John and Doe, Jane},
-title = {Título del artículo sobre un tema interesante},
-journal = {Revista de Ciencia Avanzada},
-year = {2023},
-volume = {15},
-number = {2},
-pages = {125-148},
+bibtex_example = """@InProceedings{10.1007/978-3-031-44693-1_30,
+author={Huang, Hui and Wu, Shuangzhi and Liang, Xinnian and Wang, Bing and Shi, Yanrui and Wu, Peihao and Yang, Muyun and Zhao, Tiejun},
+editor={Liu, Fei and Duan, Nan and Xu, Qingting and Hong, Yu},
+title={Towards Making the Most of LLM for Translation Quality Estimation},
+booktitle={Natural Language Processing and Chinese Computing},
+year={2023},
+publisher={Springer Nature Switzerland},
+address={Cham},
+pages={375--386},
+isbn={978-3-031-44693-1}
 } """
 
 ris_output = bibtex_to_ris(bibtex_example, equivalences)
 print("\n--- RIS OUTPUT ---\n", ris_output)
-
-ris_example = """TY  - JOUR
-AU  - Smith, John
-AU  - Doe, Jane
-TI  - Título del artículo sobre un tema interesante
-JO  - Revista de Ciencia Avanzada
-PY  - 2023
-VL  - 15
-IS  - 2
-SP  - 125
-EP  - 148
-ID  - Smith2023
-ER  -"""
-
-bibtex_output = ris_to_bibtex(ris_example, equivalences)
-print("\n--- BIBTEX OUTPUT ---\n", bibtex_output)
