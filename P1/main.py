@@ -1,96 +1,126 @@
 import re
-import pandas as pd
 
-def load_equivalences(csv_path):
-    """Carga las equivalencias de etiquetas desde el archivo CSV."""
-    df = pd.read_csv(csv_path)
-    return dict(zip(df['BibTeX Field'], df['RIS Tag']))
+# Expresiones regulares para cada campo
+patterns = {
+    "author": re.compile(r'author\s*=\s*{(.*?)}', re.DOTALL),
+    "title": re.compile(r'title\s*=\s*{(.*?)}', re.DOTALL),
+    "year": re.compile(r'year\s*=\s*{(\d{4}(/\d{2}/\d{2})?)}'),
+    "volume": re.compile(r'volume\s*=\s*{(\d+)}'),
+    "number": re.compile(r'number\s*=\s*{(\d+)}'),
+    "pages": re.compile(r'pages\s*=\s*{(\d+)\s*--\s*(\d+)}'),
+    "doi": re.compile(r'doi\s*=\s*{(.*?)}'),
+    "url": re.compile(r'url\s*=\s*{(.*?)}'),
+    "publisher": re.compile(r'publisher\s*=\s*{(.*?)}'),
+    "journal": re.compile(r'journal\s*=\s*{(.*?)}'),
+    "booktitle": re.compile(r'booktitle\s*=\s*{(.*?)}'),
+    "editor": re.compile(r'editor\s*=\s*{(.*?)}', re.DOTALL),
+    "edition": re.compile(r'edition\s*=\s*{(.*?)}'),
+    "keywords": re.compile(r'keywords\s*=\s*{(.*?)}'),
+    "issn": re.compile(r'issn\s*=\s*{(.*?)}'),
+    "isbn": re.compile(r'isbn\s*=\s*{(.*?)}'),
+    "address": re.compile(r'address\s*=\s*{(.*?)}'),
+    "abstract": re.compile(r'abstract\s*=\s*{(.*?)}', re.DOTALL),
+    "ID": re.compile(r'@(?:article|inproceedings)\s*{([^,]+)'),
+    "@article": re.compile(r'@article\s*{'),
+    "@inproceedings": re.compile(r'@inproceedings\s*{'),
+}
 
-def bibtex_to_ris(bibtex_text, equivalences):
-    """Convierte un texto en formato BibTeX a RIS."""
-    ris_lines = ["TY  - CONF"]  # Tipo de referencia para conferencias
-    
-    for key, ris_tag in equivalences.items():
-        pattern = rf"{key}\s*=\s*\{{(.*?)\}}"
-        match = re.search(pattern, bibtex_text, re.DOTALL)
-        if match:
-            value = match.group(1)
-            
-            if key == "author":
-                authors = value.split(" and ")
-                for author in authors:
-                    ris_lines.append(f"AU  - {author.strip()}")
-            elif key == "editor":
-                editors = value.split(" and ")
-                for editor in editors:
-                    ris_lines.append(f"ED  - {editor.strip()}")
-            elif key == "pages":
-                pages = value.split("--")
-                ris_lines.append(f"SP  - {pages[0].strip()}")
-                if len(pages) > 1:
-                    ris_lines.append(f"EP  - {pages[1].strip()}")
-            elif key == "address":
-                ris_lines.append(f"CY  - {value.strip()}")
-            elif key == "isbn":
-                ris_lines.append(f"SN  - {value.strip()}")
-            else:
-                ris_lines.append(f"{ris_tag}  - {value.strip()}")
-    
-    match = re.match(r"@\w+\{(.*?),", bibtex_text)
+# Mapeo de campos BibTeX a etiquetas RIS
+bibtex_to_ris = {
+    "author": "AU",
+    "title": "TI",
+    "year": "PY",
+    "volume": "VL",
+    "number": "IS",
+    "pages": ("SP", "EP"),
+    "doi": "DO",
+    "url": "UR",
+    "publisher": "PB",
+    "journal": "JO",
+    "booktitle": "BT",  # CORRECCIÓN: booktitle debe ser BT en lugar de T2
+    "editor": "ED",
+    "edition": "ET",
+    "keywords": "KW",
+    "issn": "SN",
+    "isbn": "SN",
+    "address": "CY",
+    "abstract": "AB",
+    "ID": "ID",
+    "@article": "TY  - JOUR",
+    "@inproceedings": "TY  - CONF",
+}
+
+# Función para limpiar caracteres especiales en nombres
+def clean_text(text):
+    text = re.sub(r'{\\([a-zA-Z])}', r'\1', text)  # Elimina escapes tipo {\'a} → á
+    text = re.sub(r'[{}]', '', text)  # Elimina llaves restantes
+    return text.strip()
+
+# Función para dividir autores o editores correctamente
+def split_authors(authors_str):
+    authors = re.split(r'\s+and\s+', authors_str.strip())  # Divide por 'and'
+    return [clean_text(author.strip()) for author in authors]
+
+# Función para convertir BibTeX a RIS
+def convert_bibtex_to_ris(bibtex_entry):
+    ris_entries = []
+
+    # Extraer el tipo de entrada (@article o @inproceedings)
+    if patterns["@article"].search(bibtex_entry):
+        ris_entries.append(bibtex_to_ris["@article"])
+    elif patterns["@inproceedings"].search(bibtex_entry):
+        ris_entries.append(bibtex_to_ris["@inproceedings"])
+
+    # Extraer el ID
+    match = patterns["ID"].search(bibtex_entry)
     if match:
-        ris_lines.append(f"ID  - {match.group(1).strip()}")
-    
-    ris_lines.append("ER  -")  # Fin del registro
-    return "\n".join(ris_lines)
+        ris_entries.append(f"ID  - {match.group(1)}")
 
-def ris_to_bibtex(ris_text, equivalences):
-    """Convierte un texto en formato RIS a BibTeX."""
-    bibtex_lines = ["@InProceedings{"]
-    fields = {}
-    
-    for line in ris_text.split("\n"):
-        match = re.match(r"(\w{2})  - (.*)", line)
-        if match:
-            ris_tag, value = match.groups()
-            if ris_tag in equivalences.values():
-                bib_key = [key for key, tag in equivalences.items() if tag == ris_tag][0]
-                if bib_key == "author":
-                    fields.setdefault("author", []).append(value)
-                elif bib_key == "editor":
-                    fields.setdefault("editor", []).append(value)
-                elif bib_key == "pages":
-                    if "pages" in fields:
-                        fields["pages"] += f"--{value}"
-                    else:
-                        fields["pages"] = value
+    # Extraer otros campos
+    for field, pattern in patterns.items():
+        if field not in ["ID", "@article", "@inproceedings"]:
+            match = pattern.search(bibtex_entry)
+            if match:
+                ris_tag = bibtex_to_ris[field]
+
+                if field in ["author", "editor"]:
+                    names = split_authors(match.group(1))
+                    for name in names:
+                        ris_entries.append(f"{ris_tag}  - {name}")
+
+                elif isinstance(ris_tag, tuple):  # Campos con múltiples valores (páginas)
+                    ris_entries.append(f"{ris_tag[0]}  - {match.group(1)}")
+                    ris_entries.append(f"{ris_tag[1]}  - {match.group(2)}")
+
                 else:
-                    fields[bib_key] = value
-            elif ris_tag == "ID":
-                bibtex_lines[0] += f"{value},"
-    
-    for key, value in fields.items():
-        if isinstance(value, list):
-            value = " and ".join(value)
-        bibtex_lines.append(f"    {key} = {{{value}}},")
-    
-    bibtex_lines.append("}")
-    return "\n".join(bibtex_lines)
+                    ris_entries.append(f"{ris_tag}  - {clean_text(match.group(1))}")
 
-# Cargar equivalencias
-equivalences = load_equivalences("tag_equivalence.csv")
+    # Agregar fin de referencia (ER)
+    ris_entries.append("ER  -")
+
+    return "\n".join(ris_entries)
 
 # Ejemplo de uso
-bibtex_example = """@InProceedings{10.1007/978-3-031-44693-1_30,
-author={Huang, Hui and Wu, Shuangzhi and Liang, Xinnian and Wang, Bing and Shi, Yanrui and Wu, Peihao and Yang, Muyun and Zhao, Tiejun},
-editor={Liu, Fei and Duan, Nan and Xu, Qingting and Hong, Yu},
-title={Towards Making the Most of LLM for Translation Quality Estimation},
-booktitle={Natural Language Processing and Chinese Computing},
-year={2023},
-publisher={Springer Nature Switzerland},
-address={Cham},
-pages={375--386},
-isbn={978-3-031-44693-1}
-} """
+bibtex_entry = """
+@Article{Fatima2025,
+author={Fatima, N. Sabiyath
+and Deepika, G.
+and Anthonisamy, Arun
+and Chitra, R. Jothi
+and Muralidharan, J.
+and Alagarsamy, Manjunathan
+and Ramyasree, Kummari},
+title={Enhanced Facial Emotion Recognition Using Vision Transformer Models},
+journal={Journal of Electrical Engineering {\&} Technology},
+year={2025},
+month={Jan},
+day={29},
+abstract={Automation of facial emotion recognition is an important branch of artificial intelligence and computer vision that has many potential applications in mental health diagnostics, human--computer interaction and security. The existing methods, however, usually have weaknesses in robustness, scalability and computational efficiency. This work proposes a self-attention-based Vision Transformer method that treats images as sequences of patches to capture global dependencies and spatial relations more effectively than other methods. The model is trained and evaluated using a large-scale dataset. On average, the model achieves an overall accuracy of 97{\%}, with good precision, recall and F1 scores in most emotion categories. The model performed better and was more robust to variations in illumination and facial pose compared to other existing methods. This work takes a step forward in facial emotion recognition technology, providing a large-scale and efficient solution for real-world applications. Facial Emotion Recognition, a New Vision Transformer Based on Self-Attention for Machine Learning.},
+issn={2093-7423},
+doi={10.1007/s42835-024-02118-w},
+url={https://doi.org/10.1007/s42835-024-02118-w}
+}
+"""
 
-ris_output = bibtex_to_ris(bibtex_example, equivalences)
-print("\n--- RIS OUTPUT ---\n", ris_output)
+ris_output = convert_bibtex_to_ris(bibtex_entry)
+print(ris_output)
