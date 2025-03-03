@@ -1,6 +1,67 @@
 import re
 
-# Expresiones regulares para cada campo
+bibtex_entry = """
+@inproceedings{10.1145/3627673.3679558,
+author = {Sun, Zhongxiang and Si, Zihua and Zang, Xiaoxue and Zheng, Kai and Song, Yang and Zhang, Xiao and Xu, Jun},
+title = {Large Language Models Enhanced Collaborative Filtering},
+year = {2024},
+isbn = {9798400704369},
+publisher = {Association for Computing Machinery},
+address = {New York, NY, USA},
+url = {https://doi.org/10.1145/3627673.3679558},
+doi = {10.1145/3627673.3679558},
+abstract = {Recent advancements in Large Language Models (LLMs) have attracted considerable interest among researchers to leverage these models to enhance Recommender Systems (RSs). Existing work predominantly utilizes LLMs to generate knowledge-rich texts or utilizes LLM-derived embeddings as features to improve RSs. Although the extensive world knowledge embedded in LLMs generally benefits RSs, the application can only take a limited number of users and items as inputs, without adequately exploiting collaborative filtering information. Considering its crucial role in RSs, one key challenge in enhancing RSs with LLMs lies in providing better collaborative filtering information through LLMs. In this paper, drawing inspiration from the in-context learning and chain of thought reasoning in LLMs, we propose the Large Language Models enhanced Collaborative Filtering (LLM-CF) framework, which distills the world knowledge and reasoning capabilities of LLMs into collaborative filtering. We also explored a concise and efficient instruction-tuning method, which improves the recommendation capabilities of LLMs while preserving their general functionalities (e.g., not decreasing on the LLM benchmark). Comprehensive experiments on three real-world datasets demonstrate that LLM-CF significantly enhances several backbone recommendation models and consistently outperforms competitive baselines, showcasing its effectiveness in distilling the world knowledge and reasoning capabilities of LLM into collaborative filtering.},
+booktitle = {Proceedings of the 33rd ACM International Conference on Information and Knowledge Management},
+pages = {2178–2188},
+numpages = {11},
+keywords = {collaborative filtering, large language models},
+location = {Boise, ID, USA},
+series = {CIKM '24}
+}
+"""
+
+bibtex_entry2 = """
+@inproceedings{10.1145/3678717.3691226,
+author = {O'Sullivan, Kent and Schneider, Nicole R. and Samet, Hanan},
+title = {Metric Reasoning in Large Language Models},
+year = {2024},
+isbn = {9798400711077},
+publisher = {Association for Computing Machinery},
+address = {New York, NY, USA},
+url = {https://doi.org/10.1145/3678717.3691226},
+doi = {10.1145/3678717.3691226},
+abstract = {Spatial reasoning is a particularly challenging task that requires inferring implicit information about objects based on their relative positions in space. In an effort to develop general purpose geo-foundation models that can perform a variety of spatial reasoning tasks, preliminary work has explored what kinds of world knowledge and spatial reasoning capabilities Large Language Models (LLMs) naturally inherit from their training data. Recent work suggests that LLMs contain geospatial knowledge in the form of understanding geo-coordinates and associating spatial meaning to the key terms "near" and "far." In this paper, we show that LLMs lack the ability to adapt the meaning of the words "near" and "far" to the appropriate scale when provided contextual reference points. By uncovering biases in how LLMs answer distance-related spatial questions, we set the groundwork for developing new techniques that may enable LLMs to perform accurate spatial reasoning.},
+booktitle = {Proceedings of the 32nd ACM International Conference on Advances in Geographic Information Systems},
+pages = {501–504},
+numpages = {4},
+keywords = {Large language models, geo-foundation models, metric relations},
+location = {Atlanta, GA, USA},
+series = {SIGSPATIAL '24}
+}
+"""
+
+
+bibtex_entry3 = """
+@article{10.1145/3703403,
+author = {Sundar, Varun and Gupta, Mohit},
+title = {Quanta Computer Vision},
+year = {2025},
+issue_date = {Winter 2024},
+publisher = {Association for Computing Machinery},
+address = {New York, NY, USA},
+volume = {31},
+number = {2},
+issn = {1528-4972},
+url = {https://doi.org/10.1145/3703403},
+doi = {10.1145/3703403},
+abstract = {Light impinges on a camera's sensor as a collection of discrete quantized elements, or photons. An emerging class of devices, called single-photon sensors, offers the unique capability of detecting individual photons with high-timing precision. With the increasing accessibility of high-resolution single-photon sensors, we can now explore what computer vision would look like if we could operate on light, one photon at a time.},
+journal = {XRDS},
+month = jan,
+pages = {38–43},
+numpages = {6}
+}
+"""
+
 patterns = {
     "author": re.compile(r'author\s*=\s*{(.*?)}', re.DOTALL),
     "title": re.compile(r'title\s*=\s*{(.*?)}', re.DOTALL),
@@ -25,7 +86,6 @@ patterns = {
     "@inproceedings": re.compile(r'@inproceedings\s*{'),
 }
 
-# Mapeo de campos BibTeX a etiquetas RIS
 bibtex_to_ris = {
     "author": "AU",
     "title": "TI",
@@ -37,7 +97,7 @@ bibtex_to_ris = {
     "url": "UR",
     "publisher": "PB",
     "journal": "JO",
-    "booktitle": "BT",  # CORRECCIÓN: booktitle debe ser BT en lugar de T2
+    "booktitle": "BT",
     "editor": "ED",
     "edition": "ET",
     "keywords": "KW",
@@ -50,18 +110,15 @@ bibtex_to_ris = {
     "@inproceedings": "TY  - CONF",
 }
 
-# Función para limpiar caracteres especiales en nombres
 def clean_text(text):
-    text = re.sub(r'{\\([a-zA-Z])}', r'\1', text)  # Elimina escapes tipo {\'a} → á
-    text = re.sub(r'[{}]', '', text)  # Elimina llaves restantes
+    text = re.sub(r'{\\([a-zA-Z])}', r'\1', text)
+    text = re.sub(r'[{}]', '', text)
     return text.strip()
 
-# Función para dividir autores o editores correctamente
 def split_authors(authors_str):
     authors = re.split(r'\s+and\s+', authors_str.strip())  # Divide por 'and'
     return [clean_text(author.strip()) for author in authors]
 
-# Función para convertir BibTeX a RIS
 def convert_bibtex_to_ris(bibtex_entry):
     ris_entries = []
 
@@ -95,32 +152,9 @@ def convert_bibtex_to_ris(bibtex_entry):
                 else:
                     ris_entries.append(f"{ris_tag}  - {clean_text(match.group(1))}")
 
-    # Agregar fin de referencia (ER)
     ris_entries.append("ER  -")
 
     return "\n".join(ris_entries)
 
-# Ejemplo de uso
-bibtex_entry = """
-@Article{Fatima2025,
-author={Fatima, N. Sabiyath
-and Deepika, G.
-and Anthonisamy, Arun
-and Chitra, R. Jothi
-and Muralidharan, J.
-and Alagarsamy, Manjunathan
-and Ramyasree, Kummari},
-title={Enhanced Facial Emotion Recognition Using Vision Transformer Models},
-journal={Journal of Electrical Engineering {\&} Technology},
-year={2025},
-month={Jan},
-day={29},
-abstract={Automation of facial emotion recognition is an important branch of artificial intelligence and computer vision that has many potential applications in mental health diagnostics, human--computer interaction and security. The existing methods, however, usually have weaknesses in robustness, scalability and computational efficiency. This work proposes a self-attention-based Vision Transformer method that treats images as sequences of patches to capture global dependencies and spatial relations more effectively than other methods. The model is trained and evaluated using a large-scale dataset. On average, the model achieves an overall accuracy of 97{\%}, with good precision, recall and F1 scores in most emotion categories. The model performed better and was more robust to variations in illumination and facial pose compared to other existing methods. This work takes a step forward in facial emotion recognition technology, providing a large-scale and efficient solution for real-world applications. Facial Emotion Recognition, a New Vision Transformer Based on Self-Attention for Machine Learning.},
-issn={2093-7423},
-doi={10.1007/s42835-024-02118-w},
-url={https://doi.org/10.1007/s42835-024-02118-w}
-}
-"""
-
-ris_output = convert_bibtex_to_ris(bibtex_entry)
+ris_output = convert_bibtex_to_ris(bibtex_entry3)
 print(ris_output)
