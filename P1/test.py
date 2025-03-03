@@ -2,11 +2,7 @@ import re
 import os
 import sys
 
-# ==========================
-# Conversión de BibTeX a RIS
-# ==========================
-
-# Expresiones regulares para extraer campos de BibTeX (incluyendo month y day)
+# Expresiones regulares mejoradas, incluyendo month y day
 patterns = {
     "author": re.compile(r'author\s*=\s*{(.*?)}', re.DOTALL),
     "title": re.compile(r'title\s*=\s*{(.*?)}', re.DOTALL),
@@ -38,7 +34,7 @@ bibtex_to_ris = {
     "volume": "VL",
     "number": "IS",
     "pages": ("SP", "EP"),
-    "doi": "DO",  # El DOI se asigna a DO
+    "doi": "DO",  # Actualizado: el DOI se asigna a DO
     "url": "UR",
     "publisher": "PB",
     "journal": "JO",
@@ -52,24 +48,26 @@ bibtex_to_ris = {
     "abstract": "AB",
 }
 
-# Función para limpiar caracteres especiales (se eliminan llaves y se realizan algunos reemplazos simples)
+# Función para limpiar caracteres especiales en nombres
 def clean_text(text):
-    # Reemplazos simples para acentuaciones (puedes ampliar según necesidad)
+    # Elimina escapes tipo {\v{R}}epa → Řepa
     text = re.sub(r'{\\[a-z]\{([a-zA-Z])\}}', r'\1', text)
+    # Elimina escapes tipo {\'a} → á
     text = re.sub(r'{\\([a-zA-Z])}', r'\1', text)
+    # Elimina llaves restantes
     text = re.sub(r'[{}]', '', text)
     return text.strip()
 
-# Función para dividir autores o editores (se asume separación por " and ")
+# Función para dividir autores o editores correctamente
 def split_authors(authors_str):
-    authors = re.split(r'\s+and\s+', authors_str.strip())
+    authors = re.split(r'\s+and\s+', authors_str.strip())  # Divide por 'and'
     return [clean_text(author.strip()) for author in authors]
 
-# Función para convertir una entrada BibTeX a formato RIS
+# Función para convertir BibTeX a RIS
 def convert_bibtex_to_ris(bibtex_entry):
     ris_entries = []
     
-    # Determinar el tipo de entrada
+    # Determinar el tipo de entrada (@article, @inproceedings, @book, etc.)
     if re.search(r'@article\s*{', bibtex_entry, re.IGNORECASE):
         ris_entries.append("TY  - JOUR")
     elif re.search(r'@inproceedings\s*{', bibtex_entry, re.IGNORECASE):
@@ -105,6 +103,7 @@ def convert_bibtex_to_ris(bibtex_entry):
         day_match = patterns["day"].search(bibtex_entry)
         if month_match and day_match:
             month_text = month_match.group(1).strip()
+            # Conversión de abreviatura del mes a número
             month_map = {
                 "jan": "01", "feb": "02", "mar": "03", "apr": "04",
                 "may": "05", "jun": "06", "jul": "07", "aug": "08",
@@ -121,7 +120,7 @@ def convert_bibtex_to_ris(bibtex_entry):
     if title_match:
         ris_entries.append(f"{bibtex_to_ris['title']}  - {clean_text(title_match.group(1))}")
     
-    # Según el tipo, procesar journal o booktitle
+    # Según el tipo de entrada, procesar journal o booktitle
     if re.search(r'@article\s*{', bibtex_entry, re.IGNORECASE):
         journal_match = patterns["journal"].search(bibtex_entry)
         if journal_match:
@@ -170,7 +169,7 @@ def convert_bibtex_to_ris(bibtex_entry):
     if doi_match:
         ris_entries.append(f"{bibtex_to_ris['doi']}  - {clean_text(doi_match.group(1))}")
     
-    # Agregar la clave de la entrada (ID)
+    # Agregar la clave de la entrada (ID) al final
     if id_match:
         ris_entries.append(f"ID  - {id_match.group(1).strip()}")
     
@@ -179,11 +178,13 @@ def convert_bibtex_to_ris(bibtex_entry):
     
     return "\n".join(ris_entries)
 
+# Procesar múltiples entradas BibTeX en un archivo
 def process_bibtex_file(file_path):
     try:
         with open(file_path, 'r', encoding='utf-8') as f:
             content = f.read()
-        # Separa las entradas individuales; si no se encuentra separación, se procesa todo el contenido
+        
+        # Dividir el archivo en entradas individuales de BibTeX
         bibtex_entries = re.findall(r'(@\w+\{[^@]*?\n\})', content, re.DOTALL)
         if not bibtex_entries:
             bibtex_entries = [content]
@@ -196,183 +197,20 @@ def process_bibtex_file(file_path):
     except Exception as e:
         return f"Error al procesar el archivo: {str(e)}"
 
-# ==========================
-# Conversión de RIS a BibTeX
-# ==========================
-
-# Función para convertir una única entrada RIS a formato BibTeX
-def convert_ris_to_bibtex(ris_entry):
-    # Separar líneas y almacenar los campos encontrados.
-    # Para etiquetas que pueden aparecer varias veces (por ejemplo, AU, ED, KW) se usan listas.
-    fields = {}
-    multiline_tags = ["AU", "ED", "KW"]
-    pages = {}  # Para SP y EP
-    bib_type = None
-    citation_id = None
-    da_value = None
-
-    for line in ris_entry.splitlines():
-        line = line.strip()
-        if not line:
-            continue
-        m = re.match(r'^([A-Z]{2})\s*-\s*(.*)$', line)
-        if m:
-            tag = m.group(1)
-            value = m.group(2).strip()
-            if tag == "TY":
-                # Determinar el tipo de entrada según el valor
-                type_value = value.strip()
-                if type_value == "JOUR":
-                    bib_type = "Article"
-                elif type_value == "CONF":
-                    bib_type = "InProceedings"
-                elif type_value == "BOOK":
-                    bib_type = "Book"
-                else:
-                    bib_type = "Misc"
-            elif tag == "ID":
-                citation_id = value
-            elif tag == "DA":
-                da_value = value
-            elif tag == "SP":
-                pages["start"] = value
-            elif tag == "EP":
-                pages["end"] = value
-            else:
-                if tag in multiline_tags:
-                    fields.setdefault(tag, []).append(value)
-                else:
-                    fields[tag] = value
-
-    # Si no se encontró tipo, se asigna Misc
-    if not bib_type:
-        bib_type = "Misc"
-    # Si no se encontró clave, se genera una clave por defecto
-    if not citation_id:
-        citation_id = "Clave"
-
-    # Iniciar la construcción de la entrada BibTeX
-    bibtex_lines = []
-    bibtex_lines.append(f"@{bib_type}{{{citation_id},")
-    # Campos de autores
-    if "AU" in fields:
-        authors = " and ".join(fields["AU"])
-        bibtex_lines.append(f"  author = {{{authors}}},")
-    # Campos de editores
-    if "ED" in fields:
-        editors = " and ".join(fields["ED"])
-        bibtex_lines.append(f"  editor = {{{editors}}},")
-    # Título
-    if "TI" in fields:
-        bibtex_lines.append(f"  title = {{{fields['TI']}}},")
-    # Según el tipo, asignar journal o booktitle
-    if bib_type == "Article" and "JO" in fields:
-        bibtex_lines.append(f"  journal = {{{fields['JO']}}},")
-    if bib_type == "InProceedings" and "BT" in fields:
-        bibtex_lines.append(f"  booktitle = {{{fields['BT']}}},")
-    # Año
-    if "PY" in fields:
-        bibtex_lines.append(f"  year = {{{fields['PY']}}},")
-    # Si DA existe, extraer month y day
-    if da_value:
-        parts = da_value.split("/")
-        if len(parts) == 3:
-            # Convertir mes numérico a abreviatura
-            month_map = {
-                "01": "Jan", "02": "Feb", "03": "Mar", "04": "Apr",
-                "05": "May", "06": "Jun", "07": "Jul", "08": "Aug",
-                "09": "Sep", "10": "Oct", "11": "Nov", "12": "Dec"
-            }
-            month_abbr = month_map.get(parts[1], parts[1])
-            bibtex_lines.append(f"  month = {{{month_abbr}}},")
-            bibtex_lines.append(f"  day = {{{parts[2]}}},")
-    # Volume
-    if "VL" in fields:
-        bibtex_lines.append(f"  volume = {{{fields['VL']}}},")
-    # Número (issue)
-    if "IS" in fields:
-        bibtex_lines.append(f"  number = {{{fields['IS']}}},")
-    # Páginas
-    if "start" in pages and "end" in pages:
-        bibtex_lines.append(f"  pages = {{{pages['start']}--{pages['end']}}},")
-    # DOI
-    if "DO" in fields:
-        bibtex_lines.append(f"  doi = {{{fields['DO']}}},")
-    # URL
-    if "UR" in fields:
-        bibtex_lines.append(f"  url = {{{fields['UR']}}},")
-    # Publisher
-    if "PB" in fields:
-        bibtex_lines.append(f"  publisher = {{{fields['PB']}}},")
-    # Address
-    if "CY" in fields:
-        bibtex_lines.append(f"  address = {{{fields['CY']}}},")
-    # Abstract
-    if "AB" in fields:
-        bibtex_lines.append(f"  abstract = {{{fields['AB']}}},")
-    # ISBN/ISSN (se asigna al campo isbn)
-    if "SN" in fields:
-        bibtex_lines.append(f"  isbn = {{{fields['SN']}}},")
-    # Edition
-    if "ET" in fields:
-        bibtex_lines.append(f"  edition = {{{fields['ET']}}},")
-    # Keywords
-    if "KW" in fields:
-        keywords = " and ".join(fields["KW"]) if isinstance(fields["KW"], list) else fields["KW"]
-        bibtex_lines.append(f"  keywords = {{{keywords}}},")
-    
-    # Eliminar la coma del último campo
-    if bibtex_lines[-1].endswith(","):
-        bibtex_lines[-1] = bibtex_lines[-1][:-1]
-    
-    bibtex_lines.append("}")
-    return "\n".join(bibtex_lines)
-
-def process_ris_file(file_path):
-    try:
-        with open(file_path, 'r', encoding='utf-8') as f:
-            content = f.read()
-        # Se asume que cada entrada RIS está separada por líneas en blanco
-        ris_entries = re.split(r'\n\s*\n', content.strip())
-        if not ris_entries:
-            ris_entries = [content]
-        
-        bibtex_entries = []
-        for entry in ris_entries:
-            entry = entry.strip()
-            if entry:
-                bibtex_entries.append(convert_ris_to_bibtex(entry))
-        return "\n\n".join(bibtex_entries)
-    except Exception as e:
-        return f"Error al procesar el archivo RIS: {str(e)}"
-
-# ==========================
-# Función principal: Detecta la extensión y convierte
-# ==========================
-
 def main():
     try:
-        input_file = input("Ingrese el nombre del archivo a convertir (.bib o .ris): ").strip()
+        input_file = input("Ingrese el nombre del archivo BibTeX (.bib) a convertir: ")
         if not os.path.isfile(input_file):
             print(f"Error: El archivo '{input_file}' no existe.")
             return
         
-        base, ext = os.path.splitext(input_file)
-        ext = ext.lower()
-        if ext == ".bib":
-            output_file = base + "_generado.ris"
-            print(f"Procesando archivo BibTeX '{input_file}'...")
-            result = process_bibtex_file(input_file)
-        elif ext == ".ris":
-            output_file = base + "_generado.bib"
-            print(f"Procesando archivo RIS '{input_file}'...")
-            result = process_ris_file(input_file)
-        else:
-            print("Error: La extensión del archivo debe ser .bib o .ris")
-            return
+        output_file = os.path.splitext(input_file)[0] + "_generado.ris"
+        print(f"Procesando archivo '{input_file}'...")
+        ris_content = process_bibtex_file(input_file)
         
         with open(output_file, 'w', encoding='utf-8') as f:
-            f.write(result)
+            f.write(ris_content)
+        
         print(f"Conversión completada. Resultado guardado en '{output_file}'")
     except Exception as e:
         print(f"Error: {str(e)}")
