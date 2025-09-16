@@ -1,0 +1,145 @@
+Normalización,Vectorizador,Modelo,F1_macro,Parámetros óptimos
+solo_lemas,solo_lemas__binario__bigramas.pkl,NaiveBayes,0.5480823146183708,{'alpha': 1.0}
+solo_lemas,solo_lemas__binario__bigramas.pkl,LogisticRegression,0.6327508971588658,"{'C': 10, 'solver': 'liblinear'}"
+solo_lemas,solo_lemas__binario__bigramas.pkl,SVM,0.6427757334915694,"{'C': 1.0, 'kernel': 'linear'}"
+solo_lemas,solo_lemas__binario__trigramas.pkl,NaiveBayes,0.282485378118816,{'alpha': 1.0}
+solo_lemas,solo_lemas__binario__trigramas.pkl,LogisticRegression,0.5150157214783742,"{'C': 10, 'solver': 'liblinear'}"
+solo_lemas,solo_lemas__binario__trigramas.pkl,SVM,0.5394776380777495,"{'C': 1.0, 'kernel': 'linear'}"
+solo_lemas,solo_lemas__binario__unigramas.pkl,NaiveBayes,0.6594017041866084,{'alpha': 0.5}
+solo_lemas,solo_lemas__binario__unigramas.pkl,LogisticRegression,0.731794296406062,"{'C': 10, 'solver': 'liblinear'}"
+solo_lemas,solo_lemas__binario__unigramas.pkl,SVM,0.7271632689295499,"{'C': 0.1, 'kernel': 'linear'}"
+solo_lemas,solo_lemas__binario__uni_bi.pkl,NaiveBayes,0.6752391300500645,{'alpha': 1.0}
+solo_lemas,solo_lemas__binario__uni_bi.pkl,LogisticRegression,0.7188322150050827,"{'C': 10, 'solver': 'liblinear'}"
+solo_lemas,solo_lemas__binario__uni_bi.pkl,SVM,0.725536558111334,"{'C': 1.0, 'kernel': 'linear'}"
+solo_lemas,solo_lemas__frecuencia__bigramas.pkl,NaiveBayes,0.5476311044126365,{'alpha': 1.0}
+solo_lemas,solo_lemas__frecuencia__bigramas.pkl,LogisticRegression,0.6374993039613474,"{'C': 10, 'solver': 'liblinear'}"
+solo_lemas,solo_lemas__frecuencia__bigramas.pkl,SVM,0.6433567829575976,"{'C': 1.0, 'kernel': 'linear'}"
+solo_lemas,solo_lemas__frecuencia__trigramas.pkl,NaiveBayes,0.27982372508030984,{'alpha': 1.0}
+solo_lemas,solo_lemas__frecuencia__trigramas.pkl,LogisticRegression,0.5207959007687087,"{'C': 10, 'solver': 'liblinear'}"
+solo_lemas,solo_lemas__frecuencia__trigramas.pkl,SVM,0.5419616584157075,"{'C': 1.0, 'kernel': 'linear'}"
+solo_lemas,solo_lemas__frecuencia__unigramas.pkl,NaiveBayes,0.6596027339555637,{'alpha': 1.0}
+solo_lemas,solo_lemas__frecuencia__unigramas.pkl,LogisticRegression,0.729570669441841,"{'C': 1.0, 'solver': 'liblinear'}"
+solo_lemas,solo_lemas__frecuencia__unigramas.pkl,SVM,0.7164186999519992,"{'C': 0.1, 'kernel': 'linear'}"
+solo_lemas,solo_lemas__frecuencia__uni_bi.pkl,NaiveBayes,0.6748225486450214,{'alpha': 1.0}
+solo_lemas,solo_lemas__frecuencia__uni_bi.pkl,LogisticRegression,0.7210433776622972,"{'C': 10, 'solver': 'liblinear'}"
+solo_lemas,solo_lemas__frecuencia__uni_bi.pkl,SVM,0.7233054168085987,"{'C': 0.1, 'kernel': 'linear'}"
+solo_lemas,solo_lemas__tfidf__bigramas.pkl,NaiveBayes,0.5568433505533663,{'alpha': 0.1}
+solo_lemas,solo_lemas__tfidf__bigramas.pkl,LogisticRegression,0.5479883334542711,"{'C': 10, 'solver': 'liblinear'}"
+solo_lemas,solo_lemas__tfidf__bigramas.pkl,SVM,0.6166524979736074,"{'C': 10, 'kernel': 'linear'}"
+solo_lemas,solo_lemas__tfidf__trigramas.pkl,NaiveBayes,0.48267937834845764,{'alpha': 0.5}
+solo_lemas,solo_lemas__tfidf__trigramas.pkl,LogisticRegression,0.42572782987877594,"{'C': 10, 'solver': 'liblinear'}"
+solo_lemas,solo_lemas__tfidf__trigramas.pkl,SVM,0.4742870708019848,"{'C': 10, 'kernel': 'linear'}"
+solo_lemas,solo_lemas__tfidf__unigramas.pkl,NaiveBayes,0.6344110354602043,{'alpha': 0.1}
+solo_lemas,solo_lemas__tfidf__unigramas.pkl,LogisticRegression,0.6862303895935703,"{'C': 10, 'solver': 'liblinear'}"
+solo_lemas,solo_lemas__tfidf__unigramas.pkl,SVM,0.7100379539009051,"{'C': 10, 'kernel': 'linear'}"
+solo_lemas,solo_lemas__tfidf__uni_bi.pkl,NaiveBayes,0.645959551543622,{'alpha': 0.1}
+solo_lemas,solo_lemas__tfidf__uni_bi.pkl,LogisticRegression,0.62156757249677,"{'C': 10, 'solver': 'liblinear'}"
+solo_lemas,solo_lemas__tfidf__uni_bi.pkl,SVM,0.6941135934456378,"{'C': 10, 'kernel': 'linear'}"
+lemas_y_stopwords,lemas_y_stopwords__binario__bigramas.pkl,NaiveBayes,0.3536379469600529,{'alpha': 1.0}
+lemas_y_stopwords,lemas_y_stopwords__binario__bigramas.pkl,LogisticRegression,0.4416653058044638,"{'C': 10, 'solver': 'liblinear'}"
+lemas_y_stopwords,lemas_y_stopwords__binario__bigramas.pkl,SVM,0.4554486827585616,"{'C': 1.0, 'kernel': 'linear'}"
+lemas_y_stopwords,lemas_y_stopwords__binario__trigramas.pkl,NaiveBayes,0.2778691503436631,{'alpha': 1.0}
+lemas_y_stopwords,lemas_y_stopwords__binario__trigramas.pkl,LogisticRegression,0.4240659184752003,"{'C': 10, 'solver': 'liblinear'}"
+lemas_y_stopwords,lemas_y_stopwords__binario__trigramas.pkl,SVM,0.4290640741385389,"{'C': 1.0, 'kernel': 'linear'}"
+lemas_y_stopwords,lemas_y_stopwords__binario__unigramas.pkl,NaiveBayes,0.6087576438489973,{'alpha': 0.5}
+lemas_y_stopwords,lemas_y_stopwords__binario__unigramas.pkl,LogisticRegression,0.5848154994859625,"{'C': 10, 'solver': 'liblinear'}"
+lemas_y_stopwords,lemas_y_stopwords__binario__unigramas.pkl,SVM,0.5826005147731224,"{'C': 1.0, 'kernel': 'linear'}"
+lemas_y_stopwords,lemas_y_stopwords__binario__uni_bi.pkl,NaiveBayes,0.5702927275245269,{'alpha': 1.0}
+lemas_y_stopwords,lemas_y_stopwords__binario__uni_bi.pkl,LogisticRegression,0.5502246477539424,"{'C': 10, 'solver': 'liblinear'}"
+lemas_y_stopwords,lemas_y_stopwords__binario__uni_bi.pkl,SVM,0.5765609665644413,"{'C': 1.0, 'kernel': 'linear'}"
+lemas_y_stopwords,lemas_y_stopwords__frecuencia__bigramas.pkl,NaiveBayes,0.353862592425746,{'alpha': 1.0}
+lemas_y_stopwords,lemas_y_stopwords__frecuencia__bigramas.pkl,LogisticRegression,0.44108634985687517,"{'C': 10, 'solver': 'liblinear'}"
+lemas_y_stopwords,lemas_y_stopwords__frecuencia__bigramas.pkl,SVM,0.45758895551645296,"{'C': 1.0, 'kernel': 'linear'}"
+lemas_y_stopwords,lemas_y_stopwords__frecuencia__trigramas.pkl,NaiveBayes,0.2765600479123413,{'alpha': 1.0}
+lemas_y_stopwords,lemas_y_stopwords__frecuencia__trigramas.pkl,LogisticRegression,0.4240659184752003,"{'C': 10, 'solver': 'liblinear'}"
+lemas_y_stopwords,lemas_y_stopwords__frecuencia__trigramas.pkl,SVM,0.4289022618408043,"{'C': 1.0, 'kernel': 'linear'}"
+lemas_y_stopwords,lemas_y_stopwords__frecuencia__unigramas.pkl,NaiveBayes,0.6067496120561436,{'alpha': 1.0}
+lemas_y_stopwords,lemas_y_stopwords__frecuencia__unigramas.pkl,LogisticRegression,0.5864120791958549,"{'C': 10, 'solver': 'liblinear'}"
+lemas_y_stopwords,lemas_y_stopwords__frecuencia__unigramas.pkl,SVM,0.5844324426571784,"{'C': 1.0, 'kernel': 'linear'}"
+lemas_y_stopwords,lemas_y_stopwords__frecuencia__uni_bi.pkl,NaiveBayes,0.5699892398222881,{'alpha': 1.0}
+lemas_y_stopwords,lemas_y_stopwords__frecuencia__uni_bi.pkl,LogisticRegression,0.5580240585854261,"{'C': 10, 'solver': 'liblinear'}"
+lemas_y_stopwords,lemas_y_stopwords__frecuencia__uni_bi.pkl,SVM,0.5732710859904215,"{'C': 1.0, 'kernel': 'linear'}"
+lemas_y_stopwords,lemas_y_stopwords__tfidf__bigramas.pkl,NaiveBayes,0.4358949020940508,{'alpha': 0.5}
+lemas_y_stopwords,lemas_y_stopwords__tfidf__bigramas.pkl,LogisticRegression,0.4257947781146722,"{'C': 10, 'solver': 'liblinear'}"
+lemas_y_stopwords,lemas_y_stopwords__tfidf__bigramas.pkl,SVM,0.4374246527927025,"{'C': 10, 'kernel': 'linear'}"
+lemas_y_stopwords,lemas_y_stopwords__tfidf__trigramas.pkl,NaiveBayes,0.4224228619628579,{'alpha': 0.5}
+lemas_y_stopwords,lemas_y_stopwords__tfidf__trigramas.pkl,LogisticRegression,0.4187590855394648,"{'C': 10, 'solver': 'liblinear'}"
+lemas_y_stopwords,lemas_y_stopwords__tfidf__trigramas.pkl,SVM,0.4257947781146722,"{'C': 10, 'kernel': 'linear'}"
+lemas_y_stopwords,lemas_y_stopwords__tfidf__unigramas.pkl,NaiveBayes,0.5936153952968496,{'alpha': 0.1}
+lemas_y_stopwords,lemas_y_stopwords__tfidf__unigramas.pkl,LogisticRegression,0.5483272634564461,"{'C': 10, 'solver': 'liblinear'}"
+lemas_y_stopwords,lemas_y_stopwords__tfidf__unigramas.pkl,SVM,0.5739499925187074,"{'C': 10, 'kernel': 'linear'}"
+lemas_y_stopwords,lemas_y_stopwords__tfidf__uni_bi.pkl,NaiveBayes,0.553056589862552,{'alpha': 0.1}
+lemas_y_stopwords,lemas_y_stopwords__tfidf__uni_bi.pkl,LogisticRegression,0.45785442758850603,"{'C': 10, 'solver': 'liblinear'}"
+lemas_y_stopwords,lemas_y_stopwords__tfidf__uni_bi.pkl,SVM,0.5355227145565629,"{'C': 10, 'kernel': 'linear'}"
+limpieza_total,limpieza_total__binario__bigramas.pkl,NaiveBayes,0.3684568755167895,{'alpha': 1.0}
+limpieza_total,limpieza_total__binario__bigramas.pkl,LogisticRegression,0.4416653058044638,"{'C': 10, 'solver': 'liblinear'}"
+limpieza_total,limpieza_total__binario__bigramas.pkl,SVM,0.45431000587223486,"{'C': 1.0, 'kernel': 'linear'}"
+limpieza_total,limpieza_total__binario__trigramas.pkl,NaiveBayes,0.29617531635273986,{'alpha': 1.0}
+limpieza_total,limpieza_total__binario__trigramas.pkl,LogisticRegression,0.4240659184752003,"{'C': 10, 'solver': 'liblinear'}"
+limpieza_total,limpieza_total__binario__trigramas.pkl,SVM,0.4273609122491259,"{'C': 1.0, 'kernel': 'linear'}"
+limpieza_total,limpieza_total__binario__unigramas.pkl,NaiveBayes,0.6088507135413956,{'alpha': 0.5}
+limpieza_total,limpieza_total__binario__unigramas.pkl,LogisticRegression,0.5844417559618003,"{'C': 10, 'solver': 'liblinear'}"
+limpieza_total,limpieza_total__binario__unigramas.pkl,SVM,0.5819473845521272,"{'C': 1.0, 'kernel': 'linear'}"
+limpieza_total,limpieza_total__binario__uni_bi.pkl,NaiveBayes,0.5704526478444923,{'alpha': 1.0}
+limpieza_total,limpieza_total__binario__uni_bi.pkl,LogisticRegression,0.5456154019121048,"{'C': 10, 'solver': 'liblinear'}"
+limpieza_total,limpieza_total__binario__uni_bi.pkl,SVM,0.5712034364080024,"{'C': 1.0, 'kernel': 'linear'}"
+limpieza_total,limpieza_total__frecuencia__bigramas.pkl,NaiveBayes,0.3633229742170691,{'alpha': 1.0}
+limpieza_total,limpieza_total__frecuencia__bigramas.pkl,LogisticRegression,0.44108634985687517,"{'C': 10, 'solver': 'liblinear'}"
+limpieza_total,limpieza_total__frecuencia__bigramas.pkl,SVM,0.4553631220026467,"{'C': 1.0, 'kernel': 'linear'}"
+limpieza_total,limpieza_total__frecuencia__trigramas.pkl,NaiveBayes,0.29364223998573713,{'alpha': 1.0}
+limpieza_total,limpieza_total__frecuencia__trigramas.pkl,LogisticRegression,0.4240659184752003,"{'C': 10, 'solver': 'liblinear'}"
+limpieza_total,limpieza_total__frecuencia__trigramas.pkl,SVM,0.4271990999513913,"{'C': 1.0, 'kernel': 'linear'}"
+limpieza_total,limpieza_total__frecuencia__unigramas.pkl,NaiveBayes,0.6034990284974381,{'alpha': 0.5}
+limpieza_total,limpieza_total__frecuencia__unigramas.pkl,LogisticRegression,0.5898246732214052,"{'C': 10, 'solver': 'liblinear'}"
+limpieza_total,limpieza_total__frecuencia__unigramas.pkl,SVM,0.5844998337465995,"{'C': 1.0, 'kernel': 'linear'}"
+limpieza_total,limpieza_total__frecuencia__uni_bi.pkl,NaiveBayes,0.5734600859587304,{'alpha': 1.0}
+limpieza_total,limpieza_total__frecuencia__uni_bi.pkl,LogisticRegression,0.5532977769365683,"{'C': 10, 'solver': 'liblinear'}"
+limpieza_total,limpieza_total__frecuencia__uni_bi.pkl,SVM,0.5629015778135952,"{'C': 1.0, 'kernel': 'linear'}"
+limpieza_total,limpieza_total__tfidf__bigramas.pkl,NaiveBayes,0.4379134272098543,{'alpha': 0.5}
+limpieza_total,limpieza_total__tfidf__bigramas.pkl,LogisticRegression,0.4257947781146722,"{'C': 10, 'solver': 'liblinear'}"
+limpieza_total,limpieza_total__tfidf__bigramas.pkl,SVM,0.4374246527927025,"{'C': 10, 'kernel': 'linear'}"
+limpieza_total,limpieza_total__tfidf__trigramas.pkl,NaiveBayes,0.4247939760873363,{'alpha': 0.5}
+limpieza_total,limpieza_total__tfidf__trigramas.pkl,LogisticRegression,0.4187590855394648,"{'C': 10, 'solver': 'liblinear'}"
+limpieza_total,limpieza_total__tfidf__trigramas.pkl,SVM,0.4257947781146722,"{'C': 10, 'kernel': 'linear'}"
+limpieza_total,limpieza_total__tfidf__unigramas.pkl,NaiveBayes,0.5914277166514195,{'alpha': 0.1}
+limpieza_total,limpieza_total__tfidf__unigramas.pkl,LogisticRegression,0.543899309061483,"{'C': 10, 'solver': 'liblinear'}"
+limpieza_total,limpieza_total__tfidf__unigramas.pkl,SVM,0.5858278804063266,"{'C': 10, 'kernel': 'linear'}"
+limpieza_total,limpieza_total__tfidf__uni_bi.pkl,NaiveBayes,0.5572893754940431,{'alpha': 0.1}
+limpieza_total,limpieza_total__tfidf__uni_bi.pkl,LogisticRegression,0.45610342923156677,"{'C': 10, 'solver': 'liblinear'}"
+limpieza_total,limpieza_total__tfidf__uni_bi.pkl,SVM,0.5320875775183405,"{'C': 10, 'kernel': 'linear'}"
+sin_lemas,sin_lemas__binario__bigramas.pkl,NaiveBayes,0.36366882661809574,{'alpha': 1.0}
+sin_lemas,sin_lemas__binario__bigramas.pkl,LogisticRegression,0.44122501558614013,"{'C': 10, 'solver': 'liblinear'}"
+sin_lemas,sin_lemas__binario__bigramas.pkl,SVM,0.4551836313588627,"{'C': 1.0, 'kernel': 'linear'}"
+sin_lemas,sin_lemas__binario__trigramas.pkl,NaiveBayes,0.28945337471532556,{'alpha': 1.0}
+sin_lemas,sin_lemas__binario__trigramas.pkl,LogisticRegression,0.4240659184752003,"{'C': 10, 'solver': 'liblinear'}"
+sin_lemas,sin_lemas__binario__trigramas.pkl,SVM,0.4290640741385389,"{'C': 1.0, 'kernel': 'linear'}"
+sin_lemas,sin_lemas__binario__unigramas.pkl,NaiveBayes,0.6198721548598277,{'alpha': 1.0}
+sin_lemas,sin_lemas__binario__unigramas.pkl,LogisticRegression,0.5960773022312703,"{'C': 10, 'solver': 'liblinear'}"
+sin_lemas,sin_lemas__binario__unigramas.pkl,SVM,0.609088812562128,"{'C': 1.0, 'kernel': 'linear'}"
+sin_lemas,sin_lemas__binario__uni_bi.pkl,NaiveBayes,0.5531086165139719,{'alpha': 1.0}
+sin_lemas,sin_lemas__binario__uni_bi.pkl,LogisticRegression,0.5530093790462703,"{'C': 10, 'solver': 'liblinear'}"
+sin_lemas,sin_lemas__binario__uni_bi.pkl,SVM,0.5808840881304416,"{'C': 1.0, 'kernel': 'linear'}"
+sin_lemas,sin_lemas__frecuencia__bigramas.pkl,NaiveBayes,0.3584213242352259,{'alpha': 1.0}
+sin_lemas,sin_lemas__frecuencia__bigramas.pkl,LogisticRegression,0.4391200493152877,"{'C': 10, 'solver': 'liblinear'}"
+sin_lemas,sin_lemas__frecuencia__bigramas.pkl,SVM,0.45586527880845534,"{'C': 1.0, 'kernel': 'linear'}"
+sin_lemas,sin_lemas__frecuencia__trigramas.pkl,NaiveBayes,0.2865497670991533,{'alpha': 1.0}
+sin_lemas,sin_lemas__frecuencia__trigramas.pkl,LogisticRegression,0.4240659184752003,"{'C': 10, 'solver': 'liblinear'}"
+sin_lemas,sin_lemas__frecuencia__trigramas.pkl,SVM,0.4289022618408043,"{'C': 1.0, 'kernel': 'linear'}"
+sin_lemas,sin_lemas__frecuencia__unigramas.pkl,NaiveBayes,0.6208926839129172,{'alpha': 1.0}
+sin_lemas,sin_lemas__frecuencia__unigramas.pkl,LogisticRegression,0.5958826766859067,"{'C': 10, 'solver': 'liblinear'}"
+sin_lemas,sin_lemas__frecuencia__unigramas.pkl,SVM,0.6046988479565066,"{'C': 1.0, 'kernel': 'linear'}"
+sin_lemas,sin_lemas__frecuencia__uni_bi.pkl,NaiveBayes,0.5532985485422577,{'alpha': 1.0}
+sin_lemas,sin_lemas__frecuencia__uni_bi.pkl,LogisticRegression,0.5565834295815157,"{'C': 10, 'solver': 'liblinear'}"
+sin_lemas,sin_lemas__frecuencia__uni_bi.pkl,SVM,0.5897243469802504,"{'C': 1.0, 'kernel': 'linear'}"
+sin_lemas,sin_lemas__tfidf__bigramas.pkl,NaiveBayes,0.43600399172838394,{'alpha': 0.5}
+sin_lemas,sin_lemas__tfidf__bigramas.pkl,LogisticRegression,0.42402598383734336,"{'C': 10, 'solver': 'liblinear'}"
+sin_lemas,sin_lemas__tfidf__bigramas.pkl,SVM,0.4357087437786319,"{'C': 10, 'kernel': 'linear'}"
+sin_lemas,sin_lemas__tfidf__trigramas.pkl,NaiveBayes,0.42427859229046605,{'alpha': 0.5}
+sin_lemas,sin_lemas__tfidf__trigramas.pkl,LogisticRegression,0.4187590855394648,"{'C': 10, 'solver': 'liblinear'}"
+sin_lemas,sin_lemas__tfidf__trigramas.pkl,SVM,0.4257947781146722,"{'C': 10, 'kernel': 'linear'}"
+sin_lemas,sin_lemas__tfidf__unigramas.pkl,NaiveBayes,0.6091778616692343,{'alpha': 0.1}
+sin_lemas,sin_lemas__tfidf__unigramas.pkl,LogisticRegression,0.5333529600133485,"{'C': 10, 'solver': 'liblinear'}"
+sin_lemas,sin_lemas__tfidf__unigramas.pkl,SVM,0.6048843333260419,"{'C': 10, 'kernel': 'linear'}"
+sin_lemas,sin_lemas__tfidf__uni_bi.pkl,NaiveBayes,0.5462515701102729,{'alpha': 0.1}
+sin_lemas,sin_lemas__tfidf__uni_bi.pkl,LogisticRegression,0.4472679166138776,"{'C': 10, 'solver': 'liblinear'}"
+sin_lemas,sin_lemas__tfidf__uni_bi.pkl,SVM,0.5274507839250616,"{'C': 10, 'kernel': 'linear'}"
